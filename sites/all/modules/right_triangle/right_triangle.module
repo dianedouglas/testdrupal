@@ -1,0 +1,86 @@
+<?php 
+
+function right_triangle_menu() {
+    $items['right_triangle'] = array(
+        'title' => 'Right Triangle Area', 
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('right_triangle_form'),
+        'access callback' => TRUE,
+        'type' => MENU_NORMAL_ITEM,
+    );
+    $items['right_triangle/success'] = array(
+        'title' => 'Success',
+        'page callback' => 'right_triangle_success',
+        'access callback' => TRUE,
+        'type' => MENU_CALLBACK,
+    );
+    return $items;
+}
+
+function right_triangle_form() {
+    $form['side_A'] = array(
+        '#title' => 'Side A',
+        '#type' => 'textfield',
+        '#description' => t('Please enter the length of side A.'),
+        '#element_validate' => array('element_validate_is_present', 'element_validate_positive'),
+    );
+    $form['side_B'] = array(
+        '#title' => 'Side B',
+        '#type' => 'textfield',
+        '#description' => t('Please enter the length of side B.'),
+        '#element_validate' => array('element_validate_is_present', 'element_validate_positive'),
+    );
+    $form['side_C'] = array(
+        '#title' => 'Side C',
+        '#type' => 'textfield',
+        '#description' => t('Please enter the length of side C.'),
+        '#element_validate' => array('element_validate_is_present', 'element_validate_positive'),
+    );
+    $form['lengths'] = array(
+        '#type' => 'value',
+        '#value' => array(),
+    );
+    $form['submit'] = array(
+        '#type' => 'submit',
+        '#value' => 'Go',
+    );
+    return $form;
+}
+
+function element_validate_is_present($element, &$form_state) {
+    if (empty($element['#value'])) {
+        form_error($element, t('You must enter a length.'));        
+    }
+}
+
+function element_validate_positive($element, &$form_state) {
+    if ($element['#value'] <= 0) {
+        form_error($element, t('Length must be a positive number.'));
+    }
+}
+
+function right_triangle_form_validate($form, &$form_state) {
+    if (empty(form_get_errors())) {
+        $side_A = $form_state['values']['side_A'];
+        $side_B = $form_state['values']['side_B'];
+        $side_C = $form_state['values']['side_C'];
+        $sides = array($side_A, $side_B, $side_C);
+        sort($sides);
+
+        if (($sides[0] * $sides[0]) + ($sides[1] * $sides[1]) != ($sides[2] * $sides[2])) {
+            form_set_error('', 'This is not a right triangle.');
+        }
+        form_set_value($form['lengths'], $sides, $form_state);
+    }
+}
+
+function right_triangle_form_submit($form, &$form_state) {
+    $lengths = $form_state['values']['lengths'];
+    $_SESSION['area'] = $lengths[0] * $lengths[1] / 2;
+    $form_state['redirect'] = 'right_triangle/success';
+}
+
+function right_triangle_success() {
+    $area = $_SESSION['area'];
+    return "<p> The area of your right triangle is: $area </p>";
+}

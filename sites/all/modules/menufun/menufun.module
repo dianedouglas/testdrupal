@@ -1,0 +1,87 @@
+<?php 
+/**
+* @file
+* Use this module to play with Drupal's menus.
+*/
+
+/**
+* Implementation of hook_permission
+*/
+function menufun_permission() {
+    $menufun_permissions = array(
+        'receive greeting' => array(
+            'title' => t('Receive Greeting'),
+            'description' => t('Allow users to receive a greeting message.'),
+        ),
+        'receive farewell' => array(
+            'title' => t('Receive Farewell'),
+            'description' => t('Allow users to receive a farewell message.'),
+        ),
+    );
+    return $menufun_permissions;
+}
+
+/** 
+* Implementation of hook_menu
+*/
+function menufun_menu() {
+    $items = array();
+    //original simple. 
+    // $items['menufun'] = array(
+    //     'title' => 'Greeting',
+    //     'page callback' => 'menufun_hello',
+    //     'page arguments' => array('Darth', 'Vader'),
+    //     'access callback' => TRUE,
+    //     'type' => MENU_NORMAL_ITEM,
+    // );
+
+
+    //include permissions with access callback and access arguments (which are not page arguments)
+    //use 'user_access' as the access callback to use default 'check permissions page' behavior.
+    // access arguments are the keys to use to look up the user's permissions relative to the given menu item.
+    $items['menufun/greeting'] = array(
+        'title' => 'Greeting',
+        'page callback' => 'menufun_hello',
+        'page arguments' => array('Darth', 'Vader'),
+        'access callback' => 'user_access',
+        'access arguments' => array('receive greeting'),
+        'type' => MENU_NORMAL_ITEM,
+    );
+
+
+    //shows a nested menu from a nested url, and a function in an external file.
+    // $items['menufun/nested_item'] = array(
+    //     'title' => 'Farewell',
+    //     'page callback' => 'menufun_farewell',
+    //     'file' => 'menufun_greeting.inc',
+    //     'access callback' => TRUE,
+    //     'type' => MENU_NORMAL_ITEM,
+    // );
+
+    //shows a secondary menu item with permission
+    // $items['menufun/farewell'] = array(
+    //     'title' => 'Farewell',
+    //     'page callback' => 'menufun_farewell',
+    //     'file' => 'menufun_greeting.inc',
+    //     'access callback' => 'user_access',
+    //     'access arguments' => array('receive farewell'),
+    //     'type' => MENU_NORMAL_ITEM,
+    // );
+
+    $items['menufun/farewell'] = array(
+        'title' => 'Farewell',
+        'page callback' => 'menufun_farewell',
+        'access callback' => TRUE,
+        'type' => MENU_CALLBACK,
+    ); //yes you can use this with drupal_goto to redirect drupal_goto('menufun/farewell')
+    return $items;
+}
+
+/**
+* Page callback.
+*/
+function menufun_hello($first_name = '', $last_name = '') {
+    return "Hello there $first_name $last_name!";
+    // if you go to /menufun/Luke/Skywalker you get 'Hello there Luke Skywalker!', unless you specify 'page arguments'
+}
+

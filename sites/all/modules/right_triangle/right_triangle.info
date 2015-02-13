@@ -1,0 +1,5 @@
+name = Right Triangle
+description = Allows you to enter 3 side lengths to find the area of a right triangle. 
+package = Epicodus Examples
+core = 7.x
+files[] = right_triangle.module

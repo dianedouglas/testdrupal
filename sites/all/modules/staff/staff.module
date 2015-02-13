@@ -1,0 +1,15 @@
+<?php
+/**
+ * Implements hook_node_info().
+ */
+
+function staff_node_info() {
+  return array(
+  'slot' => array(
+  'name' => t('Staff Team'),
+  'base' => 'slot',
+  'description' => t('An Staff is used for users who belongs to the website team.'),
+  'title_label' => t('Title'),
+  )
+  );
+} 

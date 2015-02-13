@@ -1,0 +1,6 @@
+name = Menu Fun
+description = Learn about the menu system.
+package = Epicodus Examples
+core = 7.x
+files[] = menufun.module
+files[] = menufun_greeting.inc

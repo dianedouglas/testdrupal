@@ -1,0 +1,20 @@
+<?php
+function test_menu() 
+{
+    $items = array();
+    $items['test/testing'] = array(
+        'title' => 'TESTING!',
+        'page callback' => 'say_test',
+        'access arguments' => array('access content'),
+        'type' => MENU_CALLBACK,
+    );
+    return $items;
+}
+function say_test() {
+    $vars = array();
+    $vars['type']="ul";
+    $vars['title'] = "";
+    $vars['attributes']=array("");
+    $vars['items'][0]="Wassup!";
+    return theme_item_list($vars);
+}

@@ -1,0 +1,71 @@
+<?php 
+/**
+* @file
+* Play with form api.
+*/
+
+/**
+* Implements hook_menu
+* In this case page call back is existing drupal function to create form.
+*/
+
+function formexample_menu() {
+    $items['formexample'] = array(
+        'title' => 'View sample form',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('formexample_nameform'),
+        'access callback' => TRUE,
+        'type' => MENU_NORMAL_ITEM,
+    );
+    $items['success'] = array(
+        'title' => 'Success',
+        'page callback' => 'formexample_success',
+        'access callback' => TRUE,
+        'type' => MENU_CALLBACK,
+    );
+    return $items;
+}
+
+
+/**
+* Define a form.
+*/
+function formexample_nameform() {
+    //create field for username. field name is key, value is array of info for that field.
+    $form['user_name'] = array(
+        '#title' => 'Your Name',
+        '#type' => 'textfield',
+        '#description' => t('Please enter name.'),
+    );
+
+    $form['submit'] = array(
+        '#type' => 'submit',
+        '#value' => 'Submit',
+    );
+
+    return $form;
+}
+
+/**
+* Validate using the standard formid_validate function. formid = formexample_nameform.
+*/
+function formexample_nameform_validate($form, &$form_state) {
+    if ($form_state['values']['user_name'] == 'King Kong') {
+        form_set_error('user_name', 'You can not be King Kong.');
+    }
+    //form_set_error function tells drupal that something failed and the form is displayed again with errors.
+}
+
+/**
+* Handle post validation form submission.
+* standard function formid_submit
+*/
+function formexample_nameform_submit($form, &$form_state) {
+    $name = $form_state['values']['user_name'];
+    // drupal_set_message("Thanks for filling out the form, $name!");
+    $form_state['redirect'] = 'success';
+}
+
+function formexample_success() {
+    return "Hooray!";
+}

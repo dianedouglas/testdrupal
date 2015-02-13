@@ -1,0 +1,46 @@
+<?php 
+
+function ping_pong_menu() {
+    $items['ping_pong'] = array(
+        'title' => 'Ping Pong Problem',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('ping_pong_form'),
+        'access callback' => TRUE,
+        'type' => MENU_NORMAL_ITEM,
+    );
+    $items['success'] = array(
+        'title' => 'Success',
+        'page callback' => 'ping_pong_success',
+        'access callback' => TRUE,
+        'type' => MENU_CALLBACK,
+    );
+    return $items;
+}
+
+function ping_pong_form() {
+    $form['count_goal'] = array(
+        '#title' => 'Count Goal',
+        '#type' => 'textfield',
+        '#description' => t('Please enter the number you want to count up to.'),
+        '#element_validate' => array('ping_pong_form_count_goal_validate'),
+    );
+
+    $form['submit'] = array(
+        '#type' => 'submit',
+        '#value' => 'Go',
+    );
+
+    return $form;
+}
+
+function ping_pong_form_count_goal_validate($element, &$form_state) {
+    form_error($element, 'FUCK YOU');
+}
+
+function ping_pong_form_submit($form, &$form_state) {
+    $form_state['redirect'] = 'success';
+}
+
+function ping_pong_success() {
+    return "Hooray!";
+}

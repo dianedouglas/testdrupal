@@ -1,0 +1,4 @@
+name = specials
+description = List out a restaurant's daily specials.
+package = My Epicodus Modules
+core = 7.x
